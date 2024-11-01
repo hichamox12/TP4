@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>from Patients</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css">
+
+</head>
+<body>
+<div layout:fragment="content1">
+    <div class="col-md offset-3">
+    <form method="post" th:action="@{save}">
+<div>
+    <label for="nom">Nom</label>
+    <input id="nom" class="form-control" type="text" name="nom" th:value="${patient.nom}">
+    <span th:errors="${patient.nom}"></span>
+
+</div>
+        <div>
+            <label>Date de Naissance</label>
+            <input class="form-control"  type="date" name="dateNaisaince" th:value="${patient.dateNaisaince}">
+            <span th:errors="${patient.dateNaisaince}"></span>
+        </div>
+
+        <div>
+            <label>Malade</label>
+            <input   type="checkbox" name="malade" th:checked="${patient.malade}">
+            <span th:errors="${patient.malade}"></span>
+        </div>
+
+        <div>
+            <label>Score</label>
+            <input class="form-control"  type="number" name="score" th:value="${patient.score}" min="0" step="1">
+            <span th:errors="${patient.score}"></span>
+        </div>
+
+
+<button type="submit" class="btn btn-primary">save </button>
+</form>
+</div>
+</div>
+</body>
+</html>
