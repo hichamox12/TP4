@@ -1,5 +1,6 @@
 package ma.mundia.mvcapp.web;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.ui.Model;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import ma.mundia.mvcapp.entites.Patient;
 import ma.mundia.mvcapp.repositories.PatientRepositories;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,9 +54,23 @@ public class PatientController {
         return "fromPatients";
     }
     @PostMapping("/save")
-    public String savePatient(Model model, Patient patient ) {
+    public String savePatient(Model model,@Valid Patient patient ,BindingResult bindingResult,@RequestParam(defaultValue = "0")int page,@RequestParam(defaultValue = "") String keyword ) {
 
         patientRepositories.save(patient);
         return "fromPatients";
+    }
+
+@GetMapping("/editPatient")
+public String editPatient(Model model , Long id ,String keyword, int page){
+    Patient patient = patientRepositories.findById(id).orElse(null);
+    if (patient == null) throw new RuntimeException("Patient not found");
+    model.addAttribute("patient",patient);
+    model.addAttribute("pages",page);
+    model.addAttribute("keyword",keyword);
+    return "editPatient";
+}
+    @GetMapping("/")
+    public String home(){
+        return "redirect:/index";
     }
 }
