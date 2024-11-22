@@ -23,7 +23,7 @@
     <div class="card">
         <div class="card-header">Liste des patients</div>
         <div class="card-body">
-            <form th:action="@{/index}" method="get" class="d-flex mb-3">
+            <form th:action="@{/user/index}" method="get" class="d-flex mb-3">
                 <label for="keyword" class="me-2">Key word</label>
                 <input type="text" id="keyword" name="keyword" th:value="${keyword}" class="form-control me-2" placeholder="Search by name">
                 <button type="submit" class="btn btn-primary">Chercher</button>
@@ -41,29 +41,24 @@
                     <td th:text="${p.dateNaisaince}"></td>
                     <td th:text="${p.malade}"></td>
                     <td th:text="${p.score}"></td>
-                    <td>
-                        <a onclick="return confirm('tu es sure?')" class="btn btn-danger" th:href="@{delete(id=${p.id})}"> Delete</a>
+                    <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                        <a onclick="return confirm('tu es sure?')" class="btn btn-danger" th:href="@{/admin/delete(id=${p.id})}"> Delete</a>
                     </td>
-                    <td>
-                        <a class="btn btn-success" th:href="@{editPatient(id=${p.id},keyword=${keyword},page=${pages})}"> Edit</a>
+                    <td th:if="${#authorization.expression('hasRole(''ADMIN'')')} ">
+                        <a class="btn btn-success"
+                            th:href="@{/admin/editPatient(id=${p.id}, keyword=${keyword ?: ''}, page=${pages ?: 0})}"> Edit</a>
                     </td>
                 </tr>
                 </tbody>
             </table>
             <nav>
-                <ul class="pagination justify-content-center">
-                    <li th:classappend="${currentPage == 0} ? 'disabled'" class="page-item">
-                        <a class="page-link" th:href="@{/index(page=${currentPage - 1})}">&laquo;</a>
-                    </li>
-
-
-                    <li th:each="page : ${#numbers.sequence(0, totalPages - 1)}" class="page-item"
-                        th:classappend="${page == currentPage} ? 'active'">
-                        <a class="page-link" th:href="@{/index(page=${page})}" th:text="${page + 1}"></a>
-                    </li>
-
-                    <li th:classappend="${currentPage == totalPages - 1} ? 'disabled'" class="page-item">
-                        <a class="page-link" th:href="@{/index(page=${currentPage + 1})}">&raquo;</a>
+                <ul class="nav nav-pills">
+                    <li th:each="page,status:${pages}">
+                        <a
+                                th:class="${status.index==currentPage?'btn btn-info ms-1':'btn btn-outline-info ms-1'}"
+                                th:href="@{index(page=${status.index}, keyword=${keyword})}"
+                                th:text="${status.index}">
+                        </a>
                     </li>
                 </ul>
             </nav>
