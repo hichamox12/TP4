@@ -45,6 +45,8 @@ public class PatientController {
     }
 
     @GetMapping("/admin/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     public String delete(@RequestParam(name="id") Long id) {
         patientRepositories.deleteById(id);
         return "redirect:/user/index";
